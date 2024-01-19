@@ -1,0 +1,18 @@
+{
+    "sourceFile": "main.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1705702366562,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1705702366562,
+            "name": "Commit-0",
+            "content": "import Splide from '@splidejs/splide'\r\nimport { AutoScroll } from '@splidejs/splide-extension-auto-scroll'\r\nimport { Intersection } from '@splidejs/splide-extension-intersection'\r\nimport '@splidejs/splide/css'\r\nimport './style.styl'\r\n\r\nconst sel = (e) => document.querySelector(e)\r\nconst selAll = (e) => document.querySelectorAll(e)\r\nconst l = (e) => console.log(e)\r\n\r\nl('qwe')\r\n"
+        }
+    ]
+}
