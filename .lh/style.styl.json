@@ -3,11 +3,23 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1705701611072,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1705708520872,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,2 @@\n+[slider-cut] .w-dyn-item\r\n+  display block !important\r\n"
+                },
+                {
+                    "date": 1705708532947,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,2 @@\n+[slider-cut] .w-dyn-item\r\n+  display block !important\r\n"
+                },
+                {
+                    "date": 1705708845114,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,15 @@\n+[slider-cut] .w-dyn-item\r\n+  display block !important\r\n+\r\n+/*\r\n+.splide.is-initialized:not(.is-active) .splide__list\r\n+  display flex !important\r\n+  gap 2rem\r\n+\r\n+.arrow, .round-arrow\r\n+  user-select none\r\n+\r\n+.lib-item__slider\r\n+  .splide__track\r\n+    overflow visible !important\r\n+*/\n\\ No newline at end of file\n"
                 }
             ],
             "date": 1705701611072,
