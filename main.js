@@ -98,11 +98,13 @@ onDomReady(() => {
 
     initSplideArrows(slider, sliderPrefix)
     initSplideBullets(slider, sliderPrefix)
+    initNumPagination(slider, sliderPrefix)
     slider.on('resized', () => {
       // initSplideBullets(slider, sliderPrefix)
     })
     initObserver(slider.root.querySelector('.splide__list'), 100, 'refresh', () => {
       slider.refresh()
+      initNumPagination(slider, sliderPrefix)
       slider.go(0)
     })
     initObserver(slider.root.querySelector('.splide__list'), 200, 'bullets', () => {
@@ -119,6 +121,19 @@ export function onDomReady(run) {
       run()
     })
   }
+}
+function initNumPagination(splide, classPrefix) {
+  const slider$ = splide.root
+  const pagination$ = slider$.querySelector(`.${classPrefix}__num-pagination`)
+  function initState(newIndex = splide.index) {
+    const index = Math.ceil(newIndex / splide.options.perPage)
+    const pages = Math.floor(splide.length / splide.options.perPage)
+    pagination$.textContent = index + 1 + '/' + pages
+  }
+  initState()
+  splide.on('move', function (newIndex, oldIndex) {
+    initState(newIndex)
+  })
 }
 export function initSplideBullets(splide, classPrefix) {
   const slider$ = splide.root
@@ -154,19 +169,38 @@ export function initSplideBullets(splide, classPrefix) {
 }
 export function initSplideArrows(splide) {
   const slider$ = splide.root
-  slider$.querySelectorAll(`.arrow--left`).forEach((el) =>
+  const leftArrow$a = slider$.querySelectorAll(`.arrow--left`)
+  const rightArrow$a = slider$.querySelectorAll(`.arrow:not(.arrow--left)`)
+  leftArrow$a.forEach((el) =>
     el.addEventListener('pointerdown', function () {
-      l('<')
       splide.go('<')
     })
   )
-  slider$.querySelectorAll(`.arrow:not(.arrow--left)`).forEach((el) =>
+  rightArrow$a.forEach((el) =>
     el.addEventListener('pointerdown', function () {
-      l('>')
-
       splide.go('>')
     })
   )
+
+  function initArrowState(newIndex = splide.index) {
+    const index = Math.ceil(newIndex / splide.options.perPage)
+    const pages = Math.floor(splide.length / splide.options.perPage)
+
+    if (index === 0) {
+      leftArrow$a.forEach((el) => el.classList.add('arrow--disabled'))
+    } else {
+      leftArrow$a.forEach((el) => el.classList.remove('arrow--disabled'))
+    }
+    if (index + 1 >= pages) {
+      rightArrow$a.forEach((el) => el.classList.add('arrow--disabled'))
+    } else {
+      rightArrow$a.forEach((el) => el.classList.remove('arrow--disabled'))
+    }
+  }
+  initArrowState()
+  splide.on('move', function (newIndex, oldIndex) {
+    initArrowState(newIndex)
+  })
 }
 export function addSplideClasses(slider) {
   let splide
