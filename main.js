@@ -152,15 +152,18 @@ export function initSplideBullets(splide, classPrefix) {
     slider$.querySelector(`.${classPrefix}__pagination .bullet:nth-of-type(${index + 1})`).classList.add('bullet--active')
   })
 }
-export function initSplideArrows(splide, classPrefix) {
+export function initSplideArrows(splide) {
   const slider$ = splide.root
-  slider$.querySelectorAll(`.${classPrefix}__arrows .arrow--left`).forEach((el) =>
+  slider$.querySelectorAll(`.arrow--left`).forEach((el) =>
     el.addEventListener('pointerdown', function () {
+      l('<')
       splide.go('<')
     })
   )
-  slider$.querySelectorAll(`.${classPrefix}__arrows .arrow:not(.arrow--left)`).forEach((el) =>
+  slider$.querySelectorAll(`.arrow:not(.arrow--left)`).forEach((el) =>
     el.addEventListener('pointerdown', function () {
+      l('>')
+
       splide.go('>')
     })
   )
@@ -172,7 +175,7 @@ export function addSplideClasses(slider) {
   } else if (isDomEl(slider)) {
     splide = slider
   }
-  const track = splide.children[0]
+  const track = splide.querySelector('.w-dyn-list')
   const list = track.children[0]
   const slide = list.childNodes
   splide.classList.add('splide')
