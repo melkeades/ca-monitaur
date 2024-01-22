@@ -24,7 +24,7 @@ function toggleItems(_el) {
   })
 }
 aboutDd$.addEventListener('change', (e) => {
-  if (e.target.value === '') clearFilter$.classList.remove('clear-filter--active')
+  if (e.target.value === '' && contentDd$.value === '') clearFilter$.classList.remove('clear-filter--active')
   else clearFilter$.classList.add('clear-filter--active')
 })
 contentDd$.addEventListener('change', (e) => {
@@ -51,7 +51,7 @@ contentDd$.addEventListener('change', (e) => {
       selAll('.lib-item').forEach((el) => {
         el.classList.remove('hide')
       })
-      clearFilter$.classList.remove('clear-filter--active')
+      if (e.target.value === '' && aboutDd$.value === '') clearFilter$.classList.remove('clear-filter--active')
   }
 })
 
