@@ -105,6 +105,7 @@ onDomReady(() => {
     initObserver(slider.root.querySelector('.splide__list'), 100, 'refresh', () => {
       slider.refresh()
       initNumPagination(slider, sliderPrefix)
+
       slider.go(0)
     })
     initObserver(slider.root.querySelector('.splide__list'), 200, 'bullets', () => {
@@ -122,6 +123,49 @@ export function onDomReady(run) {
     })
   }
 }
+export function initSplideBullets(splide, classPrefix) {
+  const slider$ = splide.root
+  let pages = 1
+  // parse bullets inside the container and repopulate
+  const pagination$ = slider$.querySelector(`.${classPrefix}__pagination`)
+  function initSate() {
+    pages = Math.ceil(splide.length / splide.options.perPage)
+    if (pages > 1) {
+      pagination$.parentElement.style.maxHeight = 'revert-layer' // to get the css value
+
+      const bullet$ = slider$.querySelector(`.${classPrefix}__pagination .bullet:not(.bullet--active)`)
+      let fragment = document.createDocumentFragment()
+      for (let i = 0; i < pages; i++) {
+        let clone$ = bullet$.cloneNode(true)
+        clone$.addEventListener('click', (e) => {
+          splide.go('>' + i)
+        })
+        fragment.appendChild(clone$)
+      }
+      fragment.firstChild.classList.add('bullet--active')
+      pagination$.replaceChildren(fragment)
+    } else {
+      // keep the dom elements to repopulate in the future
+      pagination$.parentElement.style.maxHeight = '0px'
+    }
+  }
+  function initBullets(newIndex = splide.index) {
+    const index = Math.ceil(newIndex / splide.options.perPage)
+
+    slider$.querySelector(`.${classPrefix}__pagination .bullet--active`)?.classList.remove('bullet--active')
+    slider$.querySelector(`.${classPrefix}__pagination .bullet:nth-of-type(${index + 1})`)?.classList.add('bullet--active')
+  }
+  splide.on('mounted resized ', function () {
+    initSate()
+    splide.go(0)
+    // updateBullets()
+  })
+  splide.on('move ', function (newIndex, oldIndex) {
+    if (pages < 2) return
+    // const index = splide.Components.Controller.toPage(splide.index) // works but the calculation can be wrong as the bullets are manually added
+    initBullets(newIndex)
+  })
+}
 function initNumPagination(splide, classPrefix) {
   const slider$ = splide.root
   const pagination$ = slider$.querySelector(`.${classPrefix}__num-pagination`)
@@ -131,40 +175,8 @@ function initNumPagination(splide, classPrefix) {
     pagination$.textContent = index + 1 + '/' + pages
   }
   initState()
-  splide.on('move', function (newIndex, oldIndex) {
-    initState(newIndex)
-  })
-}
-export function initSplideBullets(splide, classPrefix) {
-  const slider$ = splide.root
-  // parse bullets inside the container and repopulate
-  const pagination$ = slider$.querySelector(`.${classPrefix}__pagination`)
-  const pages = Math.ceil(splide.length / splide.options.perPage)
-  if (pages > 1) {
-    pagination$.parentElement.style.maxHeight = 'revert-layer' // to get the css value
-
-    const bullet$ = slider$.querySelector(`.${classPrefix}__pagination .bullet:not(.bullet--active)`)
-    let fragment = document.createDocumentFragment()
-    for (let i = 0; i < pages; i++) {
-      let clone$ = bullet$.cloneNode(true)
-      clone$.addEventListener('click', (e) => {
-        splide.go('>' + i)
-      })
-      fragment.appendChild(clone$)
-    }
-    fragment.firstChild.classList.add('bullet--active')
-    pagination$.replaceChildren(fragment)
-  } else {
-    // keep the dom elements to repopulate in the future
-    pagination$.parentElement.style.maxHeight = '0px'
-  }
-  splide.on('move', function (newIndex, oldIndex) {
-    if (pages < 2) return
-    // const index = splide.Components.Controller.toPage(splide.index) // works but the calculation can be wrong as the bullets are manually added
-    const index = Math.ceil(newIndex / splide.options.perPage)
-
-    slider$.querySelector(`.${classPrefix}__pagination .bullet--active`).classList.remove('bullet--active')
-    slider$.querySelector(`.${classPrefix}__pagination .bullet:nth-of-type(${index + 1})`).classList.add('bullet--active')
+  splide.on('move resized', function (newIndex, oldIndex) {
+    initState()
   })
 }
 export function initSplideArrows(splide) {
@@ -184,7 +196,7 @@ export function initSplideArrows(splide) {
 
   function initArrowState(newIndex = splide.index) {
     const index = Math.ceil(newIndex / splide.options.perPage)
-    const pages = Math.floor(splide.length / splide.options.perPage)
+    const pages = Math.ceil(splide.length / splide.options.perPage)
 
     if (index === 0) {
       leftArrow$a.forEach((el) => el.classList.add('arrow--disabled'))
@@ -198,8 +210,8 @@ export function initSplideArrows(splide) {
     }
   }
   initArrowState()
-  splide.on('move', function (newIndex, oldIndex) {
-    initArrowState(newIndex)
+  splide.on('move resized', function (newIndex, oldIndex) {
+    initArrowState()
   })
 }
 export function addSplideClasses(slider) {
