@@ -86,9 +86,11 @@ onDomReady(() => {
       breakpoints: {
         991: {
           perPage: 2,
+          perMove: 2,
         },
         478: {
           perPage: 1,
+          perMove: 1,
         },
       },
     }).mount()
