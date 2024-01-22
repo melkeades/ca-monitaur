@@ -8,9 +8,13 @@ const l = (...e) => console.log(...e)
 const isDomEl = (el) => el instanceof Document || el instanceof Element
 
 const contentDd$ = sel('.lib-filter__dd--content')
+const aboutDd$ = sel('.lib-filter__dd--about')
+const clearFilter$ = sel('.clear-filter')
+
 const sliderPrefix = 'lib-item'
 let sliders = []
 function toggleItems(_el) {
+  clearFilter$.classList.add('clear-filter--active')
   selAll('.lib-item').forEach((el) => {
     if (el.classList.contains('lib-item--' + _el)) {
       el.classList.remove('hide')
@@ -19,6 +23,10 @@ function toggleItems(_el) {
     }
   })
 }
+aboutDd$.addEventListener('change', (e) => {
+  if (e.target.value === '') clearFilter$.classList.remove('clear-filter--active')
+  else clearFilter$.classList.add('clear-filter--active')
+})
 contentDd$.addEventListener('change', (e) => {
   switch (e.target.value) {
     case 'blog':
@@ -43,12 +51,14 @@ contentDd$.addEventListener('change', (e) => {
       selAll('.lib-item').forEach((el) => {
         el.classList.remove('hide')
       })
+      clearFilter$.classList.remove('clear-filter--active')
   }
 })
 
 sel('.clear-filter').addEventListener('click', (e) => {
   contentDd$.value = 'all'
   contentDd$.dispatchEvent(new Event('change'))
+  e.target.classList.remove('clear-filter--active')
 })
 
 function initObserver(element$, timeout = 100, observerName = 'default', callback) {
@@ -168,11 +178,11 @@ export function initSplideBullets(splide, classPrefix) {
 }
 function initNumPagination(splide, classPrefix) {
   const slider$ = splide.root
-  const pagination$ = slider$.querySelector(`.${classPrefix}__num-pagination`)
+  const pagination$a = slider$.querySelectorAll(`.${classPrefix}__num-pagination`)
   function initState(newIndex = splide.index) {
     const index = Math.ceil(newIndex / splide.options.perPage)
-    const pages = Math.floor(splide.length / splide.options.perPage)
-    pagination$.textContent = index + 1 + '/' + pages
+    const pages = Math.ceil(splide.length / splide.options.perPage)
+    pagination$a.forEach((el) => (el.textContent = index + 1 + ' of ' + pages))
   }
   initState()
   splide.on('move resized', function (newIndex, oldIndex) {
