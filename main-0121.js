@@ -51,14 +51,35 @@ sel('.clear-filter').addEventListener('click', (e) => {
   contentDd$.dispatchEvent(new Event('change'))
 })
 
+let refreshSliderTo
+//  const refreshSliderOb   =
+// const config =
+// function initSliderOb(slider)
+// {
+//   const refreshSliderOb = new MutationObserver(function (mutationList, observer) {
+//     for (const mutation of mutationList) {
+//       if (mutation.type === 'childList') {
+//         refreshSlider(slider)
+//       }
+//     }
+//   })
+//   selAll('.lib-item__slider').forEach((el) => {
+//     refreshSliderOb.observe(el, { childList: true, subtree: true })
+//   })
+// }
+//
 function initObserver(element$, timeout = 100, observerName = 'default', callback) {
-  if (element$.observer?.[observerName]) return
-  let timerId = 0
-
+  // if (element$.observer?.[observerName]) return
   const observer = new MutationObserver(function (mutations) {
-    clearTimeout(timerId)
-    timerId = setTimeout(() => {
-      console.log(observerName, element$)
+    element$.observerTimer = element$.observerTimer || {}
+
+    const timer = element$.observerTimer?.[observerName] || Math.round(Math.random() * 10000)
+
+    clearTimeout(timer)
+    element$.observerTimer[observerName] = setTimeout(() => {
+      // l('upd:', timer, element)
+      l(observerName, element$)
+
       callback()
       // observer.disconnect()
     }, timeout)
@@ -67,7 +88,36 @@ function initObserver(element$, timeout = 100, observerName = 'default', callbac
   element$.observer = element$.observer || {}
   element$.observer[observerName] = observer
 }
+window.fsAttributes = window.fsAttributes || []
+window.fsAttributes.push([
+  'cmsfilter',
+  (filterInstances) => {
+    // The callback passes a `filterInstances` array with all the `CMSFilters` instances on the page.
+    const [filterInstance] = filterInstances
 
+    // The `renderitems` event runs whenever the list renders items after filtering.
+    filterInstance.listInstance.on('renderitems', (renderedItems) => {
+      // console.log(renderedItems)
+      sliders.forEach((slider, i) => {
+        l(i)
+        initObserver(slider.root.querySelector('.splide__list'), 100, 'refresh', () => {
+          slider.refresh()
+        })
+        initObserver(slider.root.querySelector('.splide__list'), 200, 'bullets', () => {
+          initSplideBullets(slider, sliderPrefix)
+        })
+        slider.refresh()
+        slider.go(0)
+        initSplideBullets(slider, sliderPrefix)
+
+        // slider.Components.Controller.toPage(1)
+        // refreshSlider(slider)
+      })
+    })
+  },
+])
+
+// ;['article', 'blog', 'podcast', 'news'].forEach((el_) => {
 onDomReady(() => {
   selAll('.lib-item__slider').forEach((el) => {
     // const el = sel('.slider--' + el_)
@@ -99,13 +149,6 @@ onDomReady(() => {
     slider.on('resized', () => {
       // initSplideBullets(slider, sliderPrefix)
     })
-    initObserver(slider.root.querySelector('.splide__list'), 100, 'refresh', () => {
-      slider.refresh()
-      slider.go(0)
-    })
-    initObserver(slider.root.querySelector('.splide__list'), 200, 'bullets', () => {
-      initSplideBullets(slider, sliderPrefix)
-    })
   })
 })
 
@@ -124,7 +167,10 @@ export function initSplideBullets(splide, classPrefix) {
   const pagination$ = slider$.querySelector(`.${classPrefix}__pagination`)
   const pages = Math.ceil(splide.length / splide.options.perPage)
   if (pages > 1) {
-    pagination$.parentElement.style.maxHeight = 'revert-layer' // to get the css value
+    // l(slider$, pages)
+    pagination$.parentElement.style.maxHeight = 'none'
+    // pagination$.style.visibility = 'visible'
+    // slider$.querySelector(`.${classPrefix}__arrows`).style.visibility = 'visible'
 
     const bullet$ = slider$.querySelector(`.${classPrefix}__pagination .bullet:not(.bullet--active)`)
     let fragment = document.createDocumentFragment()
@@ -138,8 +184,10 @@ export function initSplideBullets(splide, classPrefix) {
     fragment.firstChild.classList.add('bullet--active')
     pagination$.replaceChildren(fragment)
   } else {
-    // keep the dom elements to repopulate in the future
+    // pagination$.replaceChildren()
     pagination$.parentElement.style.maxHeight = '0px'
+    // pagination$.style.visibility = 'hidden'
+    // slider$.querySelector(`.${classPrefix}__arrows`).style.visibility = 'hidden'
   }
   splide.on('move', function (newIndex, oldIndex) {
     if (pages < 2) return
