@@ -56,7 +56,7 @@ contentDd$.addEventListener('change', (e) => {
 })
 
 sel('.clear-filter').addEventListener('click', (e) => {
-  contentDd$.value = 'all'
+  contentDd$.value = ''
   contentDd$.dispatchEvent(new Event('change'))
   e.target.classList.remove('clear-filter--active')
 })
