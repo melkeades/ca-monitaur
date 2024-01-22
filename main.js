@@ -58,7 +58,7 @@ function initObserver(element$, timeout = 100, observerName = 'default', callbac
   const observer = new MutationObserver(function (mutations) {
     clearTimeout(timerId)
     timerId = setTimeout(() => {
-      console.log(observerName, element$)
+      // console.log(observerName, element$)
       callback()
       // observer.disconnect()
     }, timeout)
@@ -154,13 +154,16 @@ export function initSplideBullets(splide, classPrefix) {
 }
 export function initSplideArrows(splide, classPrefix) {
   const slider$ = splide.root
-  slider$.querySelector(`.${classPrefix}__arrows .arrow--left`).addEventListener('pointerdown', function () {
-    splide.go('<')
-  })
-
-  slider$.querySelector(`.${classPrefix}__arrows .arrow:not(.arrow--left)`).addEventListener('pointerdown', function () {
-    splide.go('>')
-  })
+  slider$.querySelectorAll(`.${classPrefix}__arrows .arrow--left`).forEach((el) =>
+    el.addEventListener('pointerdown', function () {
+      splide.go('<')
+    })
+  )
+  slider$.querySelectorAll(`.${classPrefix}__arrows .arrow:not(.arrow--left)`).forEach((el) =>
+    el.addEventListener('pointerdown', function () {
+      splide.go('>')
+    })
+  )
 }
 export function addSplideClasses(slider) {
   let splide
