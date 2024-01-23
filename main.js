@@ -14,7 +14,7 @@ const clearFilter$ = sel('.clear-filter')
 const sliderPrefix = 'lib-item'
 let sliders = []
 function toggleItems(_el) {
-  clearFilter$.classList.add('clear-filter--active')
+  clearFilter$?.classList.add('clear-filter--active')
   selAll('.lib-item').forEach((el) => {
     if (el.classList.contains('lib-item--' + _el)) {
       el.classList.remove('hide')
@@ -23,11 +23,11 @@ function toggleItems(_el) {
     }
   })
 }
-aboutDd$.addEventListener('change', (e) => {
-  if (e.target.value === '' && contentDd$.value === '') clearFilter$.classList.remove('clear-filter--active')
+aboutDd$?.addEventListener('change', (e) => {
+  if (e.target.value === '' && (contentDd$?.value === '' || !contentDd$)) clearFilter$.classList.remove('clear-filter--active')
   else clearFilter$.classList.add('clear-filter--active')
 })
-contentDd$.addEventListener('change', (e) => {
+contentDd$?.addEventListener('change', (e) => {
   switch (e.target.value) {
     case 'blog':
       toggleItems('blog')
@@ -55,9 +55,11 @@ contentDd$.addEventListener('change', (e) => {
   }
 })
 
-sel('.clear-filter').addEventListener('click', (e) => {
-  contentDd$.value = ''
-  contentDd$.dispatchEvent(new Event('change'))
+clearFilter$?.addEventListener('click', (e) => {
+  if (contentDd$) {
+    contentDd$.value = ''
+    contentDd$.dispatchEvent(new Event('change'))
+  }
   e.target.classList.remove('clear-filter--active')
 })
 
@@ -79,7 +81,7 @@ function initObserver(element$, timeout = 100, observerName = 'default', callbac
 }
 
 onDomReady(() => {
-  selAll('.lib-item__slider').forEach((el) => {
+  selAll('.lib-item__slider')?.forEach((el) => {
     // const el = sel('.slider--' + el_)
     addSplideClasses(el)
 
@@ -239,3 +241,7 @@ export function addSplideClasses(slider) {
   list.classList.add('splide__list')
   slide.forEach((slide) => slide.classList.add('splide__slide'))
 }
+
+//
+//  ARTICLES --------------------------------------------
+//
