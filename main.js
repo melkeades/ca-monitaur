@@ -241,7 +241,3 @@ export function addSplideClasses(slider) {
   list.classList.add('splide__list')
   slide.forEach((slide) => slide.classList.add('splide__slide'))
 }
-
-//
-//  ARTICLES --------------------------------------------
-//
