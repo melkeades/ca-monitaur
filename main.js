@@ -241,3 +241,13 @@ export function addSplideClasses(slider) {
   list.classList.add('splide__list')
   slide.forEach((slide) => slide.classList.add('splide__slide'))
 }
+//
+// PODCAST -----------------------------------------------
+//
+
+const readAll$a = selAll('.bio__item .read-all')
+readAll$a?.forEach((el) => {
+  el.onpointerdown = (e) => {
+    e.currentTarget.classList.toggle('read-all--open')
+  }
+})
