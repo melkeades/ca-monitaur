@@ -27,32 +27,46 @@ aboutDd$?.addEventListener('change', (e) => {
   if (e.target.value === '' && (contentDd$?.value === '' || !contentDd$)) clearFilter$.classList.remove('clear-filter--active')
   else clearFilter$.classList.add('clear-filter--active')
 })
+
 contentDd$?.addEventListener('change', (e) => {
   switch (e.target.value) {
-    case 'blog':
-      toggleItems('blog')
-      break
-    case 'podcast':
-      toggleItems('podcast')
-      break
-    case 'article':
-      toggleItems('article')
-      break
-    case 'whitepaper':
-      toggleItems('whitepaper')
-      break
-    case 'video':
-      toggleItems('video')
-      break
-    case 'webinar':
-      toggleItems('webinar')
-      break
-    default:
+    case '':
       selAll('.lib-item').forEach((el) => {
         el.classList.remove('hide')
       })
       if (e.target.value === '' && aboutDd$.value === '') clearFilter$.classList.remove('clear-filter--active')
+      break
+    default:
+      toggleItems(e.target.value)
   }
+  // switch (e.target.value) {
+  //   case 'webinar':
+  //     toggleItems('webinar')
+  //     break
+  //   case 'blog':
+  //     toggleItems('blog')
+  //     break
+  //   case 'podcast':
+  //     toggleItems('podcast')
+  //     break
+  //   case 'article':
+  //     toggleItems('article')
+  //     break
+  //   case 'whitepaper':
+  //     toggleItems('whitepaper')
+  //     break
+  //   case 'video':
+  //     toggleItems('video')
+  //     break
+  //   case 'webinar':
+  //     toggleItems('webinar')
+  //     break
+  //   default:
+  //     selAll('.lib-item').forEach((el) => {
+  //       el.classList.remove('hide')
+  //     })
+  //     if (e.target.value === '' && aboutDd$.value === '') clearFilter$.classList.remove('clear-filter--active')
+  // }
 })
 
 clearFilter$?.addEventListener('click', (e) => {
