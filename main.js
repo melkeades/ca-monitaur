@@ -205,6 +205,7 @@ function initNumPagination(splide, classPrefix) {
     initState()
   })
 }
+
 export function initSplideArrows(splide) {
   const slider$ = splide.root
   const leftArrow$a = slider$.querySelectorAll(`.arrow--left`)
@@ -263,5 +264,25 @@ const readAll$a = selAll('.bio__item .read-all')
 readAll$a?.forEach((el) => {
   el.onpointerdown = (e) => {
     e.currentTarget.classList.toggle('read-all--open')
+  }
+})
+
+//
+// LP -----------------------------------------------
+//
+
+const accordionA$ = sel('.accordion-a')
+accordionA$?.addEventListener('click', function (e) {
+  // const target = e.target
+  const accordion$ = sel('.accordion')
+  const accordionHeight = accordion$?.style.gridTemplateRows
+  console.log(accordion$, accordionHeight)
+
+  if (accordionHeight === '1fr') {
+    this.textContent = 'Read More'
+    accordion$.style.gridTemplateRows = '0fr'
+  } else if (accordionHeight === '0fr' || !accordionHeight) {
+    this.textContent = 'Read Less'
+    accordion$.style.gridTemplateRows = '1fr'
   }
 })
